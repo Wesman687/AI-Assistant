@@ -3,8 +3,9 @@ import { assets } from "@/assets/assets";
 import Image from 'next/image';
 import { Context } from '@/context/context';
 import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+const { Prism: SyntaxHighlighter } = require("react-syntax-highlighter");
+const { atomDark } = require("react-syntax-highlighter/dist/cjs/styles/prism");
+
 
 const Response = () => {
     const {
