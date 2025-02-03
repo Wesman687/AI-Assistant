@@ -3,7 +3,6 @@ import Response from '@/components/Response';
 import SideBar from '@/components/SideBar';
 
 function Main() {
-
   return (
     <>
       <div className='flex'>

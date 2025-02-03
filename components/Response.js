@@ -65,7 +65,7 @@ const Response = () => {
 
                                 </div>
                             ) : (
-                                <ReactMarkdown components={renderers} className="text-[17px] font-light leading-[1.8]">
+                                <ReactMarkdown components={renderers}  className="text-[17px] font-light leading-[1.8]">
                                     {resultData}
                                 </ReactMarkdown>
                             )}
