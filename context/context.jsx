@@ -10,7 +10,7 @@ const ContextProvider = (props) => {
   const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState("");
-  const [model, setModel] = useState("gpt-4");
+  const [model, setModel] = useState("gpt-4");  
 
   const delayPara = (index, nextWord) => {
     setTimeout(function () {
@@ -22,13 +22,19 @@ const ContextProvider = (props) => {
     setLoading(false);
     setShowResult(false);
   };
+  
+
+  const changeModel = (newModel) => {
+    console.log(`Model switched to: ${newModel}`)
+    setModel(newModel)
+  }
 
   const deepSeek = async (prompt) => {
     try {
       const response = await axios.post("https://api.paul-miracle.info/generate", { 
         user_id: "Wesman687",
         prompt: prompt,
-        model: "gpt-4"
+        model: model
       }, {
         headers: { "Content-Type": "application/json" },
         timeout: 10000000 // Set a timeout of 10 seconds
@@ -89,6 +95,8 @@ const ContextProvider = (props) => {
     input,
     setInput,
     newChat,
+    model,
+    changeModel,    
   };
 
   return (

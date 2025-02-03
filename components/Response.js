@@ -1,14 +1,17 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { assets } from "@/assets/assets";
 import Image from 'next/image';
 import { Context } from '@/context/context';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from "rehype-raw"
+import axios from 'axios';
+import ModelSelector from './ModelSelector';
 const { Prism: SyntaxHighlighter } = require("react-syntax-highlighter");
 const { atomDark } = require("react-syntax-highlighter/dist/cjs/styles/prism");
 
 
 const Response = () => {
+
     const {
         recentPrompt,
         showResult,
@@ -16,8 +19,11 @@ const Response = () => {
         resultData,
         setInput,
         input,
-        onSent
+        onSent,
+        model,
+        changeModel,        
     } = useContext(Context);
+
     const handleKeyDown = (event) => {
         if (event.key === "Enter" && event.shiftKey) {
             event.preventDefault();
@@ -78,12 +84,17 @@ const Response = () => {
                     </div>
                 )}
                 <div className=" p-5 absolute bottom-0 w-[60vw]">
+                <div className='flex'>
+                        <p className='mx-2 text-sm text-red-500'>Edit</p>
+                        <ModelSelector selectedModel={model} setSelectedModel={changeModel} />
+                        
+                    </div>
                     <div
                         className={`flex items-center justify-between gap-5 bg-blue-100 p-3 
                 transition-all duration-200 outline
                 ${input.length > 40 ? "rounded-xl" : "rounded-l"}`} 
                     >
-                        <div></div>
+                        
                         <textarea
                             onChange={(e) => {
                                 setInput(e.target.value);
@@ -91,10 +102,7 @@ const Response = () => {
                                 e.target.style.height = `${e.target.scrollHeight}px`; 
                             }}
                             onKeyDown={(e) => {
-                                if (e.key === "Enter" && !e.shiftKey) {
-                                    e.preventDefault();
-                                    onSent();
-                                }
+                                handleKeyDown(e)
                             }}
                             value={input}
                             placeholder="Enter a prompt here..."
