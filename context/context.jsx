@@ -24,7 +24,7 @@ const ContextProvider = (props) => {
 
   const deepSeek = async (prompt) => {
     try {
-      const response = await axios.post("http://209.38.61.69:5000/generate", { 
+      const response = await axios.post("https://api.paul-miracle.info/generate", { 
         user_id: "Wesman687",
         prompt: prompt,
         model: "gpt-4"
