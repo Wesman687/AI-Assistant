@@ -3,6 +3,7 @@ import { assets } from "@/assets/assets";
 import Image from 'next/image';
 import { Context } from '@/context/context';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from "rehype-raw"
 const { Prism: SyntaxHighlighter } = require("react-syntax-highlighter");
 const { atomDark } = require("react-syntax-highlighter/dist/cjs/styles/prism");
 
@@ -23,6 +24,7 @@ const Response = () => {
             setInput((prev) => prev + "\n")
         }
         if (event.key === 'Enter' && !event.shiftKey) {
+            setInput(" ")
             onSent();
         }
     }
@@ -45,7 +47,7 @@ const Response = () => {
                     <>
                         <div className="my-[50px] text-[56px] text-[#c4c7c5] font-medium p-5">
                             <p>
-                                <span className="bg-gradient-to-r from-[#4b90ff] to-[#ff5546] bg-clip-text text-transparent">Hello, Dev</span>
+                                <span className="bg-gradient-to-r from-[#4b90ff] to-[#ff5546] bg-clip-text text-transparent">Hello, Wesley</span>
                             </p>
                             <p>How can I help you today?</p>
                         </div>
@@ -56,8 +58,10 @@ const Response = () => {
 
                     <div className="overflow-y-auto w-full max-h-[80vh] scrollbar-hide">
                         <div className="my-[40px] flex items-center gap-5">
-                            <Image src={assets.user_icon} alt="" className="w-10 rounded-full" />
-                            <p>{recentPrompt}</p>
+                            <Image src={assets.user_icon} alt="" className="w-10 rounded-full" />                            
+                            <p>
+                                    {recentPrompt}
+                                </p>
                         </div>
                         <div className="flex items-start gap-5 h-[70vh]">
                             <Image src={assets.gemini_icon} alt="" className="w-10 rounded-full" />
@@ -66,7 +70,7 @@ const Response = () => {
 
                                 </div>
                             ) : (
-                                <ReactMarkdown components={renderers}  className="text-[17px] font-light leading-[1.8]">
+                                <ReactMarkdown components={renderers}  className="text-[17px] font-light leading-[1.8]" rehypePlugins={[rehypeRaw]}>
                                     {resultData}
                                 </ReactMarkdown>
                             )}
@@ -77,14 +81,14 @@ const Response = () => {
                     <div
                         className={`flex items-center justify-between gap-5 bg-blue-100 p-3 
                 transition-all duration-200 outline
-                ${input.length > 40 ? "rounded-xl" : "rounded-l"}`} // Adjust border based on text length
+                ${input.length > 40 ? "rounded-xl" : "rounded-l"}`} 
                     >
                         <div></div>
                         <textarea
                             onChange={(e) => {
                                 setInput(e.target.value);
-                                e.target.style.height = "auto"; // Reset height
-                                e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height dynamically
+                                e.target.style.height = "auto"; 
+                                e.target.style.height = `${e.target.scrollHeight}px`; 
                             }}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
@@ -100,10 +104,10 @@ const Response = () => {
                         <div className="flex items-center gap-3.5">
                             <Image src={assets.gallery_icon} alt="" className="w-6 cursor-pointer" />
                             <Image src={assets.mic_icon} alt="" className="w-6 cursor-pointer" />
-                            {input && <Image src={assets.send_icon} onClick={() => onSent()} alt="" className="w-6 cursor-pointer" />}
-
+                            {input && <Image src={assets.send_icon} onClick={() => {onSent() 
+                                textareaRef.current.style.height = "auto";}} 
+                                alt="" className="w-6 cursor-pointer" />}
                         </div>
-
                     </div>
                 </div>
             </div>

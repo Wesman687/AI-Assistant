@@ -10,6 +10,7 @@ const ContextProvider = (props) => {
   const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState("");
+  const [model, setModel] = useState("gpt-4");
 
   const delayPara = (index, nextWord) => {
     setTimeout(function () {
@@ -29,47 +30,52 @@ const ContextProvider = (props) => {
         prompt: prompt,
         model: "gpt-4"
       }, {
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        timeout: 10000000 // Set a timeout of 10 seconds
       });
       return response.data.response;
     } catch (error) {
       console.error("API error:", error);
-      console.log("Error connecting to AI.");
+      throw new Error("Error connecting to AI."); // Rethrow the error for handling in onSent
+    }
+  };
+  const resetTextareaSize = () => {
+    const textarea = document.querySelector("textarea"); // Select the textarea
+    if (textarea) {
+      textarea.style.height = "auto"; // Reset height
+      textarea.style.height = `${textarea.scrollHeight}px`; // Adjust height dynamically
     }
   };
 
   const onSent = async () => {
-    console.log(input)
+    resetTextareaSize();
+    console.log(input);
     setResultData("");
     setRecentPrompt(input);
-    setInput(" ");
+    setInput("");
     setLoading(true);
     setShowResult(true);
-    let response;
+    
     try {
-      response = await deepSeek(input);
+      const response = await deepSeek(input);
+      let responseArray = response.split("<b>");
+      let newResponse = "";
+      for (let i = 0; i < responseArray.length; i++) {
+        newResponse += (i === 0 || i % 2 !== 1) ? responseArray[i] : "<b>" + responseArray[i] + "</b>";
+      }
+      let newResponse2 = newResponse.split("</br>").join("</br>");
+      let newResponseArray = newResponse2.split(" ");
+      for (let i = 0; i < newResponseArray.length; i++) {
+        delayPara(i, newResponseArray[i] + " ");
+      }
     } catch (error) {
       console.error("API error:", error);
-      console.log("Error connecting to AI.");
-      response = "Error connecting to AI.";
+      setResultData("Error connecting to AI.");
+    } finally {
+      setLoading(false); // Ensure loading is set to false after processing
     }
-    let responseArray = response.split("**");
-    let newResponse = "";
-    for (let i = 0; i < responseArray.length; i++) {
-      if (i === 0 || i % 2 !== 1) {
-        newResponse += responseArray[i];
-      } else {
-        newResponse += "<b>" + responseArray[i] + "</b>";
-      }
-    }
-    let newResponse2 = newResponse.split("*").join("</br>");
-    let newResponseArray = newResponse2.split(" ");
-    for (let i = 0; i < newResponseArray.length; i++) {
-      const nextWord = newResponseArray[i];
-      delayPara(i, nextWord + " ");
-    }
-    setLoading(false);
   };
+
 
   const contextValue = {
     prevPrompts,
