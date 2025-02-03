@@ -30,7 +30,7 @@ const Response = () => {
         code({ inline, className, children }) {
             const match = /language-(\w+)/.exec(className || "");
             return !inline ? (
-                <SyntaxHighlighter style={dracula} language={match ? match[1] : "javascript"}>
+                <SyntaxHighlighter style={atomDark} language={match ? match[1] : "javascript"}>
                     {String(children).trim()}
                 </SyntaxHighlighter>
             ) : (
