@@ -8,6 +8,7 @@ function Main() {
       <div className='flex'>
         <SideBar />
         <Response />
+        
       </div>        
     </>
   )
